@@ -1,44 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Increment and Random Number Generator</title>
-	<style>
-		.box {
-			width: 200px;
-			height: 200px;
-			border: 1px solid black;
-			text-align: center;
-			font-size: 48px;
-			margin: 50px;
-			display: inline-block;
-		}
-		.button {
-			font-size: 24px;
-			padding: 10px;
-			background-color: blue;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage</title>
+    <style>
+        .week, .random {
+            width: 100px;
+            height: 50px;
+            border: 1px solid black;
+            display: inline-block;
+            line-height: 50px;
+            text-align: center;
+            margin: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        .selected {
+            border: 2px solid green;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-	<div class="box" id="box1">0</div>
-	<div class="box" id="box2"></div>
-	<button class="button" onclick="incrementAndRandom()">Increment and Generate Random Number</button>
+    <div class="week">0</div>
+    <div class="random">0</div>
+    <br>
+    <button id="mexico">Mexico</button>
+    <button id="china">China</button>
+    <br>
+    <input type="number" id="orders" placeholder="Number of orders" max="100">
+    <br>
+    <button id="nextWeek">Next week</button>
+    <br>
+    <button id="download">Download Data</button>
 
-	<script>
-		function incrementAndRandom() {
-			var box1 = document.getElementById("box1");
-			var box2 = document.getElementById("box2");
+    <script>
+        let week = 0;
+        let random = 0;
+        let selectedCountry = null;
+        const weekEl = document.querySelector(".week");
+        const randomEl = document.querySelector(".random");
+        const mexicoBtn = document.getElementById("mexico");
+        const chinaBtn = document.getElementById("china");
+        const ordersInput = document.getElementById("orders");
+        const nextWeekBtn = document.getElementById("nextWeek");
+        const downloadBtn = document.getElementById("download");
 
-			// Increment the number in box 1 by 1
-			box1.innerHTML = parseInt(box1.innerHTML) + 1;
+        const data = [];
 
-			// Generate a random number and display it in box 2
-			box2.innerHTML = Math.floor(Math.random() * 100);
-		}
-	</script>
+        function selectCountry(country) {
+            if (selectedCountry) {
+                selectedCountry.classList.remove("selected");
+            }
+            country.classList.add("selected");
+            selectedCountry = country;
+        }
+
+        mexicoBtn.addEventListener("click", () => selectCountry(mexicoBtn));
+        chinaBtn.addEventListener("click", () => selectCountry(chinaBtn));
+
+        nextWeekBtn.addEventListener("click", () => {
+            week++;
+            random = Math.floor(Math.random() * 40) + 1;
+
+            if (week > 20) {
+                week = 20;
+                return;
+            }
+
+            weekEl.textContent = week;
+            randomEl.textContent = random;
+
+            const rowData = {
+                week,
+                demand: random,
+                mexico: selectedCountry === mexicoBtn ? ordersInput.value : "",
+                china: selectedCountry === chinaBtn ? ordersInput.value : ""
+            };
+
+            data.push(rowData);
+        });
+
+        function downloadData() {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data");
+
+            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+            const buf = new ArrayBuffer(wbout.length);
+            const view = new Uint8Array(buf);
+
+            for (let i = 0; i < wbout.length; i++) {
+                view[i] = wbout.charCodeAt(i) & 0xFF;
+            }
+
+            const blob = new Blob([buf], { type: "application/octet-stream" });
+
+            const a = document.createElement("a");
+            const url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = "data.xlsx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        downloadBtn.addEventListener("click", downloadData);
+    </script>
 </body>
 </html>
+
