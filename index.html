@@ -5,6 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webpage</title>
     <style>
+        body {
+            background: black;
+            /*background-image: url('https://i.imgur.com/8jbzF5M.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;*/
+        }
+        .title {
+            margin-bottom: 20px;
+          }
+          
+          .title h1 {
+            font-size: 2rem;
+            margin: 0;
+          }
+          
+          .loader {
+            font-size: 6rem;
+            display: flex;
+            justify-content: center;
+          }
+          
+          .loader span {
+            animation: jump 2s ease-in-out infinite;
+          }
+          
+          .loader span:nth-child(1) {
+            animation-delay: 0s;
+          }
+          
+          .loader span:nth-child(2) {
+            animation-delay: 0.33s;
+          }
+          
+          .loader span:nth-child(3) {
+            animation-delay: 0.66s;
+          }
+          
+          @keyframes jump {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-15px);
+            }
+          }
+          
+          .quote {
+            font-size: 1.2rem;
+            margin-top: 50px;
+            text-align: center;
+          }
+          
+        .container {
+            text-align: center;
+        }
         .week, .random {
             width: 100px;
             height: 50px;
@@ -13,118 +68,288 @@
             line-height: 50px;
             text-align: center;
             margin: 10px;
+            background-color: darkblue;
+            color: white;
+        }
+        .product {
+            width: 200px;
+            height: 50px;
+            border: 1px solid black;
+            display: inline-block;
+            line-height: 50px;
+            text-align: center;
+            margin: 10px;
+            background-color: darkblue;
+            color: white;
         }
         button {
             background-color: #4CAF50;
             border: none;
             color: white;
-            padding: 15px 32px;
+            padding: 15px 0;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
-            margin: 4px 2px;
+            margin: 4px 0;
             cursor: pointer;
+            width: 100px;
         }
-        .selected {
-            border: 2px solid green;
+        button#mexico, button#china {
+            border-radius: 50% 0% 0% 50%;
         }
         input[type="number"] {
-            width: 100%;
+            width: 150px;
             padding: 12px 20px;
-            margin: 8px 0;
+            margin: 0;
             display: inline-block;
             border: 1px solid #ccc;
             box-sizing: border-box;
+            border-radius: 0% 50% 50% 0%;
         }
+
+        /* loading screen style */
+
+        .loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  z-index: 9999;
+}
+
+.title-box {
+  margin-bottom: 50px;
+}
+
+.dots {
+  display: flex;
+  justify-content: space-between;
+  width: 75px;
+  margin-bottom: 50px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: #333;
+  border-radius: 50%;
+  animation: jump 2.5s infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes jump {
+  0%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+}
+
+.quote-box {
+  max-width: 400px;
+  text-align: center;
+}
+
+
+        /* loading screen end */
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <body>
-    <div class="week">0</div>
-    <div class="random">0</div>
-    <br>
-    <button id="mexico">Mexico</button>
-    <button id="china">China</button>
-    <br>
-    <input type="number" id="orders" placeholder="Number of orders" max="100">
-    <br>
-    <button id="nextWeek">Next week</button>
-    <br>
-    <button id="download">Download Data</button>
+    <!--Loading screen-->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="title-box">
+          <h1>Inventory Manager</h1>
+        </div>
+        <div class="dots">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div class="quote-box">
+          <p id="quote"></p>
+        </div>
+      </div>
 
-    <script>
-        let week = 0;
-        let random = 0;
-        let selectedCountry = null;
-        const weekEl = document.querySelector(".week");
-        const randomEl = document.querySelector(".random");
-        const mexicoBtn = document.getElementById("mexico");
-        const chinaBtn = document.getElementById("china");
-        const ordersInput = document.getElementById("orders");
-        const nextWeekBtn = document.getElementById("nextWeek");
-        const downloadBtn = document.getElementById("download");
+      <!--Loading screen end-->
 
-        const data = [];
+    <div class="title">
+        <h1>Your Title Here</h1>
+      </div>
+      <div class="loader">
+        <span>.</span><span>.</span><span>.</span>
+      </div>
+      <div class="quote" id="quote"></div>
 
-        function selectCountry(country) {
-            if (selectedCountry) {
-                selectedCountry.classList.remove("selected");
-            }
-            country.classList.add("selected");
-            selectedCountry = country;
-        }
+    <div class="container">
+        <div>Week</div>
+        <div class="week">0</div>
+        <div style="margin-left: 30px;">Demand</div>
+        <div class="random"></div>
+        <br>
+        <div>Product</div>
+        <div class="product">Apple - $10 / ₹750</div>
+        <br>
+        <button id="mexico">Mexico</button>
+        <input type="number" id="mexicoOrders" placeholder="Number of orders" min="0" max="40">
+        <br>
+        <button id="china">China</button>
+        <input type="number" id="chinaOrders" placeholder="Number of orders" min="0" max="40">
+        <br>
+        <button id="nextWeek">Next week</button>
+        <br>
+        <button id="download">Download Data</button>
 
-        mexicoBtn.addEventListener("click", () => selectCountry(mexicoBtn));
-        chinaBtn.addEventListener("click", () => selectCountry(chinaBtn));
+        <script>
+            
+            const quotes = [
+  // Replace this with your own quotes
+  "Quote 1",
+  "Quote 2",
+  "Quote 3",
+];
 
-        nextWeekBtn.addEventListener("click", () => {
-            week++;
-            random = Math.floor(Math.random() * 40) + 1;
+document.addEventListener("DOMContentLoaded", () => {
+  const loadingScreen = document.getElementById("loadingScreen");
+  const quoteElement = document.getElementById("quote");
 
-            if (week > 20) {
-                week = 20;
-                return;
-            }
+  function displayRandomQuote() {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    quoteElement.textContent = quotes[randomIndex];
+  }
 
-            weekEl.textContent = week;
+  displayRandomQuote();
+
+  let repetitions = 0;
+  const interval = setInterval(() => {
+    displayRandomQuote();
+    repetitions++;
+  }, 2500);
+
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      if (repetitions >= 3) {
+        loadingScreen.style.display = "none";
+      } else {
+        setTimeout(() => {
+          loadingScreen.style.display = "none";
+        }, (3 - repetitions) * 2500);
+      }
+    }, 3000); // Wait for 3 seconds before checking if the repetitions are complete
+  });
+});
+
+            
+            let week = 0;
+            let random = Math.floor(Math.random() * 40) + 1;
+            const weekEl = document.querySelector(".week");
+            const randomEl = document.querySelector(".random");
             randomEl.textContent = random;
+            const mexicoOrdersInput = document.getElementById("mexicoOrders");
+            const chinaOrdersInput = document.getElementById("chinaOrders");
+            const nextWeekBtn = document.getElementById("nextWeek");
+            const downloadBtn = document.getElementById("download");
 
-            const rowData = {
-                week,
-                demand: random,
-                mexico: selectedCountry === mexicoBtn ? ordersInput.value : "",
-                china: selectedCountry === chinaBtn ? ordersInput.value : ""
-            };
+            const data = [];
+            const header = { week: "Week", demand: "Demand", product: "Product", price: "Price", mexico: "Mexico", china: "China" };
+            data.push(header);
 
-            data.push(rowData);
-        });
+            const products = [
+                { name: "Apple", price: { usd: 1, inr: 75 } },
+                { name: "Banana", price: { usd: 0.5, inr: 37.5 } },
+                { name: "Capacitor", price: { usd: 0.1, inr: 7.5 } },
+                { name: "Resistor", price: { usd: 0.05, inr: 3.75 } },
+                { name: "RAM", price: { usd: 50, inr: 3750 } },
+                { name: "CPU", price: { usd: 200, inr: 15000 } },
+                { name: "Cement", price: { usd: 120, inr: 9000 } },
+                { name: "Steel Rod", price: { usd: 10, inr: 750 } },
+                { name: "Sugar", price: { usd: 1, inr: 75 } },
+                { name: "Salt", price: { usd: 0.5, inr: 37.5 } },
+            ];
 
-        function downloadData() {
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Data");
+            let productIndex = 0;
 
-            const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
-            const buf = new ArrayBuffer(wbout.length);
-            const view = new Uint8Array(buf);
-
-            for (let i = 0; i < wbout.length; i++) {
-                view[i] = wbout.charCodeAt(i) & 0xFF;
+            function updateProduct() {
+                const productEl = document.querySelector(".product");
+                const product = products[productIndex];
+                productEl.textContent = `${product.name} - $${product.price.usd} / ₹${product.price.inr}`;
             }
 
-            const blob = new Blob([buf], { type: "application/octet-stream" });
+            updateProduct();
 
-            const a = document.createElement("a");
-            const url = window.URL.createObjectURL(blob);
-            a.href = url;
-            a.download = "data.xlsx";
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
+            nextWeekBtn.addEventListener("click", () => {
+                const rowData = {
+                    week,
+                    demand: random,
+                    product: products[productIndex].name,
+                    price: products[productIndex].price.usd,
+                    mexico: mexicoOrdersInput.value,
+                    china: chinaOrdersInput.value
+                };
 
-        downloadBtn.addEventListener("click", downloadData);
-    </script>
+                data.push(rowData);
+
+                week++;
+                random = Math.floor(Math.random() * 40) + 1;
+
+                if (week > 20) {
+                    week = 20;
+                    return;
+                }
+
+                weekEl.textContent = week;
+                randomEl.textContent = random;
+
+                productIndex = Math.floor(Math.random() * products.length);
+                updateProduct();
+
+                // Clear input boxes for new input
+                mexicoOrdersInput.value = '';
+                chinaOrdersInput.value = '';
+            });
+
+            function downloadData() {
+                const ws = XLSX.utils.json_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Data");
+
+                const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+                const buf = new ArrayBuffer(wbout.length);
+                const view = new Uint8Array(buf);
+
+                for (let i = 0; i < wbout.length; i++) {
+                    view[i] = wbout.charCodeAt(i) & 0xFF;
+                }
+
+                const blob = new Blob([buf], { type: "application/octet-stream" });
+
+                const a = document.createElement("a");
+                const url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = "data.xlsx";
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
+
+            downloadBtn.addEventListener("click", downloadData);
+        </script>
+    </div>
 </body>
 </html>
+
 
