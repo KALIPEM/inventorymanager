@@ -68,7 +68,7 @@
             margin-top: 10px;
         }
         input[type="number"] {
-            width: 150px;
+            width: 180px;
             height: 48px;
             padding: 12px 20px;
             margin: 0;
@@ -224,6 +224,10 @@
             function displayRandomQuote() {
               const randomIndex = Math.floor(Math.random() * quotes.length);
               quoteElement.textContent = quotes[randomIndex];
+
+              const backgroundMusic = document.getElementById("background-music");
+              backgroundMusic.volume = 0.5;
+              backgroundMusic.play();
             }
           
             displayRandomQuote();
@@ -280,7 +284,7 @@
           const downloadBtn = document.getElementById("download");
           
           const data = [];
-          const header = { week: "Week", demand: "Demand", product: "Product", price: "Price", mexico: "Mexico", china: "China", capacity: "Capacity", value: "Value" };
+          const header = { week: "Week", demand: "Demand", price: "Product Price", mexico: "Order Mexico", china: "Order China", sales: "sales", costs: "Costs",revenue: "Revenue",Profit: "Profit", capacity: "Inventory", value: "Value" };
           data.push(header);
           let capacity = 0;
           const deliveries = { mexico: [], china: [] };
@@ -303,7 +307,20 @@
           nextWeekBtn.addEventListener("click", () => {
               const mexicoOrders = parseInt(mexicoOrdersInput.value) || 0;
               const chinaOrders = parseInt(chinaOrdersInput.value) || 0;
+              const costs = (mexicoOrders * 8) + (chinaOrders * 7);
               const value = (8 * mexicoOrders) + (7 * chinaOrders) + lastRoundValue;
+
+
+              let sales;
+              if(capacity >= random) {
+                sales = random;
+              } else {
+                sales = capacity;
+              }
+
+              const revenue = sales * 10;
+
+              const profit = revenue - costs;
           
               const rowData = {
                   week,
@@ -312,6 +329,10 @@
                   price: products[productIndex].price.usd,
                   mexico: mexicoOrders,
                   china: chinaOrders,
+                  sales,
+                  costs,
+                  revenue,
+                  profit,
                   capacity,
                   value
               };
@@ -328,6 +349,9 @@
           
               if (week >= 1) {
                   random = Math.floor(Math.random() * 91) + 5;
+                  randomEl.textContent = random;
+              }else {
+                  random = 0;
                   randomEl.textContent = random;
               }
           
@@ -386,5 +410,9 @@
             downloadBtn.addEventListener("click", downloadData);
         </script>
     </div>
+    <audio id="background-music" loop>
+      <source src="ambient-dreamy-clouds-135528.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+  </audio>
 </body>
 </html>
