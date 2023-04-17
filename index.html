@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webpage</title>
+    <title>Sourcing Simulator - Manage your company's inventory</title>
     <style>
         body {
             background: black;
@@ -11,55 +11,12 @@
             background-repeat: no-repeat;
             background-size: cover;*/
         }
-        .title {
-            margin-bottom: 20px;
-          }
-          
-          .title h1 {
-            font-size: 2rem;
-            margin: 0;
-          }
-          
-          .loader {
-            font-size: 6rem;
-            display: flex;
-            justify-content: center;
-          }
-          
-          .loader span {
-            animation: jump 2s ease-in-out infinite;
-          }
-          
-          .loader span:nth-child(1) {
-            animation-delay: 0s;
-          }
-          
-          .loader span:nth-child(2) {
-            animation-delay: 0.33s;
-          }
-          
-          .loader span:nth-child(3) {
-            animation-delay: 0.66s;
-          }
-          
-          @keyframes jump {
-            0%, 100% {
-              transform: translateY(0);
-            }
-            50% {
-              transform: translateY(-15px);
-            }
-          }
-          
-          .quote {
-            font-size: 1.2rem;
-            margin-top: 50px;
-            text-align: center;
-          }
+        
           
         .container {
             text-align: center;
             color: white;
+            padding: 100px auto 60px auto;
         }
         .week, .random {
             width: 100px;
@@ -71,7 +28,14 @@
             margin: 10px;
             background-color: darkblue;
             color: white;
+            margin-bottom: 30px;
+            user-select: none;
         }
+
+        .box-title{
+          margin: 100px auto 5px auto;
+        }
+
         .product {
             width: 200px;
             height: 50px;
@@ -79,9 +43,10 @@
             display: inline-block;
             line-height: 50px;
             text-align: center;
-            margin: 10px;
+            margin: 10px 10px 40px 10px;
             background-color: darkblue;
             color: white;
+            user-select: none;
         }
         button {
             background-color: #4CAF50;
@@ -92,80 +57,111 @@
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
-            margin: 4px 0;
+            margin: 20px -2px;
             cursor: pointer;
+            border-radius: 12px;
             width: 100px;
         }
         button#mexico, button#china {
-            border-radius: 50% 0% 0% 50%;
+            border-radius: 40px 0% 0% 40px;
+            margin-bottom: 4px;
+            margin-top: 10px;
         }
         input[type="number"] {
             width: 150px;
+            height: 48px;
             padding: 12px 20px;
             margin: 0;
             display: inline-block;
             border: 1px solid #ccc;
             box-sizing: border-box;
-            border-radius: 0% 50% 50% 0%;
+            border-radius: 0% 40px 40px 0%;
         }
+
+        /* Add this at the end of the CSS file */
+        .title-box.white-text{
+          color: #ffffff;
+        }
+
 
         /* loading screen style */
 
         .loading-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  z-index: 9999;
-}
-
-.title-box {
-  margin-bottom: 50px;
-}
-
-.dots {
-  display: flex;
-  justify-content: space-between;
-  width: 75px;
-  margin-bottom: 50px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  background-color: #333;
-  border-radius: 50%;
-  animation: jump 2.5s infinite;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.5s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 1s;
-}
-
-@keyframes jump {
-  0%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-15px);
-  }
-}
-
-.quote-box {
-  max-width: 400px;
-  text-align: center;
-}
-
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          background-color: #ffffff;
+          z-index: 9999;
+        }
+        
+        .title-box {
+          margin: -100px auto 80px auto;
+          color: #818181;
+        }
+        
+        .title-box h1{
+            user-select: none;
+        }
+        
+        .dots {
+          display: flex;
+          justify-content: space-between;
+          width: 75px;
+          margin-bottom: 50px;
+        }
+        
+        .dot {
+          width: 10px;
+          height: 10px;
+          background-color: #333;
+          border-radius: 50%;
+          animation: jump 2.5s infinite;
+        }
+        
+        .dot:nth-child(2) {
+          animation-delay: 0.5s;
+        }
+        
+        .dot:nth-child(3) {
+          animation-delay: 1s;
+        }
+        
+        @keyframes jump {
+          0%, 80%, 100% {
+            transform: translateY(0);
+          }
+          40% {
+            transform: translateY(-35px);
+          }
+        }
+        
+        .quote-box {
+          max-width: 400px;
+          text-align: center;
+          user-select: none;
+        }
+        
+        /* Add this at the end of the CSS file */
+        .loading-screen.fade-out {
+                  animation: fade-out 1s forwards;
+                }
+                
+                @keyframes fade-out {
+          99% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 0;
+            display: none;
+            visibility: hidden;
+          }
+        }
 
         /* loading screen end */
     </style>
@@ -175,7 +171,7 @@
     <!--Loading screen-->
     <div id="loadingScreen" class="loading-screen">
         <div class="title-box">
-          <h1>Inventory Manager</h1>
+          <h1>Sourcing Simulator</h1>
         </div>
         <div class="dots">
           <span class="dot"></span>
@@ -189,141 +185,181 @@
 
       <!--Loading screen end-->
 
-    <div class="title">
-        <h1>Your Title Here</h1>
-      </div>
-      <div class="loader">
-        <span>.</span><span>.</span><span>.</span>
-      </div>
-      <div class="quote" id="quote"></div>
-
     <div class="container">
-        <div>Week</div>
+        <div class="box-title">Round</div>
         <div class="week">0</div>
-        <div style="margin-left: 30px;">Demand</div>
+        <div style="margin-bottom: 5px;">Demand</div>
         <div class="random"></div>
         <br>
-        <div>Product</div>
-        <div class="product">Apple - $10 / ₹750</div>
+        <div class="product"> $10 </div>
         <br>
         <button id="mexico">Mexico</button>
         <input type="number" id="mexicoOrders" placeholder="Number of orders" min="0" max="40">
+        <p style="color:#4CAF50;">Mexico Sourcing cost: $8</p>
         <br>
         <button id="china">China</button>
         <input type="number" id="chinaOrders" placeholder="Number of orders" min="0" max="40">
+        <p style="color:#4CAF50;">China Sourcing cost: $7</p>
         <br>
-        <button id="nextWeek">Next week</button>
+        <button id="nextWeek">Next Round</button>
         <br>
-        <button id="download">Download Data</button>
+        <button id="download" style="width: 120px;">Download Data</button>
 
         <script>
             
             const quotes = [
-  // Replace this with your own quotes
-  "Quote 1",
-  "Quote 2",
-  "Quote 3",
-];
+              // Replace this with your own quotes
+              "Business opportunities are like buses, there's always another one coming",
+              "Every problem is a gift—without problems we would not grow",
+              "Success usually comes to those who are too busy to be looking for it.",
+              "I don’t know the word ‘quit.’ Either I never did, or I have abolished it.",
+              "Imagination is everything. It is the preview of life’s coming attractions.",
+            ];
+            
+            document.addEventListener("DOMContentLoaded", () => {
+            const loadingScreen = document.getElementById("loadingScreen");
+            const quoteElement = document.getElementById("quote");
+            const titleBox = document.querySelector(".title-box");
+          
+            function displayRandomQuote() {
+              const randomIndex = Math.floor(Math.random() * quotes.length);
+              quoteElement.textContent = quotes[randomIndex];
+            }
+          
+            displayRandomQuote();
+          
+            let repetitions = 0;
+            let quoteChanges = 0;
+            const interval = setInterval(() => {
+              if (quoteChanges < 1) {
+                displayRandomQuote();
+                quoteChanges++;
+              }
+              repetitions++;
+              if (repetitions >= 3) {
+                clearInterval(interval);
+              }
+            }, 2500);
+          
+            function hideLoadingScreen() {
+              loadingScreen.classList.add("fade-out");
+              titleBox.classList.add("white-text");
+              loadingScreen.addEventListener("animationend", () => {
+                loadingScreen.style.display = "none";
+              });
+            }
+          
+            let pageLoaded = false;
+            window.addEventListener("load", () => {
+              pageLoaded = true;
+              if (repetitions >= 3) {
+                hideLoadingScreen();
+              }
+            });
+          
+            const checkLoadingStatus = setInterval(() => {
+              if (pageLoaded && repetitions >= 3) {
+                clearInterval(checkLoadingStatus);
+                hideLoadingScreen();
+              }
+            }, 100);
+          });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const loadingScreen = document.getElementById("loadingScreen");
-  const quoteElement = document.getElementById("quote");
 
-  function displayRandomQuote() {
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    quoteElement.textContent = quotes[randomIndex];
-  }
 
-  displayRandomQuote();
-
-  let repetitions = 0;
-  const interval = setInterval(() => {
-    displayRandomQuote();
-    repetitions++;
-  }, 2500);
-
-  window.addEventListener("load", () => {
-    setTimeout(() => {
-      if (repetitions >= 3) {
-        loadingScreen.style.display = "none";
-      } else {
-        setTimeout(() => {
-          loadingScreen.style.display = "none";
-        }, (3 - repetitions) * 2500);
-      }
-    }, 3000); // Wait for 3 seconds before checking if the repetitions are complete
-  });
-});
 
             
-            let week = 0;
-            let random = Math.floor(Math.random() * 40) + 1;
-            const weekEl = document.querySelector(".week");
-            const randomEl = document.querySelector(".random");
-            randomEl.textContent = random;
-            const mexicoOrdersInput = document.getElementById("mexicoOrders");
-            const chinaOrdersInput = document.getElementById("chinaOrders");
-            const nextWeekBtn = document.getElementById("nextWeek");
-            const downloadBtn = document.getElementById("download");
+          let week = -3;
+          let random = 0;
+          const weekEl = document.querySelector(".week");
+          const randomEl = document.querySelector(".random");
+          randomEl.textContent = random;
+          const mexicoOrdersInput = document.getElementById("mexicoOrders");
+          const chinaOrdersInput = document.getElementById("chinaOrders");
+          const nextWeekBtn = document.getElementById("nextWeek");
+          const downloadBtn = document.getElementById("download");
+          
+          const data = [];
+          const header = { week: "Week", demand: "Demand", product: "Product", price: "Price", mexico: "Mexico", china: "China", capacity: "Capacity", value: "Value" };
+          data.push(header);
+          let capacity = 0;
+          const deliveries = { mexico: [], china: [] };
+          let gameOver = false;
+          const products = [
+              { name: "Sales Price", price: { usd: 10, inr: 750 } },
+          ];
+          
+          let productIndex = 0;
+          let lastRoundValue = 0;
+          
+          function updateProduct() {
+              const productEl = document.querySelector(".product");
+              const product = products[productIndex];
+              productEl.textContent = `${product.name} - $${product.price.usd} / ₹${product.price.inr}`;
+          }
+          
+          updateProduct();
+          
+          nextWeekBtn.addEventListener("click", () => {
+              const mexicoOrders = parseInt(mexicoOrdersInput.value) || 0;
+              const chinaOrders = parseInt(chinaOrdersInput.value) || 0;
+              const value = (8 * mexicoOrders) + (7 * chinaOrders) + lastRoundValue;
+          
+              const rowData = {
+                  week,
+                  demand: random,
+                  product: products[productIndex].name,
+                  price: products[productIndex].price.usd,
+                  mexico: mexicoOrders,
+                  china: chinaOrders,
+                  capacity,
+                  value
+              };
+          
+              data.push(rowData);
+          
+              week++;
+              if (week > 20) {
+                  week = 20;
+                  return;
+              }
+          
+              weekEl.textContent = week;
+          
+              if (week >= 1) {
+                  random = Math.floor(Math.random() * 91) + 5;
+                  randomEl.textContent = random;
+              }
+          
+              productIndex = Math.floor(Math.random() * products.length);
+              updateProduct();
+          
+              lastRoundValue = value;
+          
+              // Clear input boxes for new input
+              mexicoOrdersInput.value = '';
+              chinaOrdersInput.value = '';
+          });
 
-            const data = [];
-            const header = { week: "Week", demand: "Demand", product: "Product", price: "Price", mexico: "Mexico", china: "China" };
-            data.push(header);
-
-            const products = [
-                { name: "Apple", price: { usd: 1, inr: 75 } },
-                { name: "Banana", price: { usd: 0.5, inr: 37.5 } },
-                { name: "Capacitor", price: { usd: 0.1, inr: 7.5 } },
-                { name: "Resistor", price: { usd: 0.05, inr: 3.75 } },
-                { name: "RAM", price: { usd: 50, inr: 3750 } },
-                { name: "CPU", price: { usd: 200, inr: 15000 } },
-                { name: "Cement", price: { usd: 120, inr: 9000 } },
-                { name: "Steel Rod", price: { usd: 10, inr: 750 } },
-                { name: "Sugar", price: { usd: 1, inr: 75 } },
-                { name: "Salt", price: { usd: 0.5, inr: 37.5 } },
-            ];
-
-            let productIndex = 0;
-
-            function updateProduct() {
-                const productEl = document.querySelector(".product");
-                const product = products[productIndex];
-                productEl.textContent = `${product.name} - $${product.price.usd} / ₹${product.price.inr}`;
-            }
-
-            updateProduct();
-
-            nextWeekBtn.addEventListener("click", () => {
-                const rowData = {
-                    week,
-                    demand: random,
-                    product: products[productIndex].name,
-                    price: products[productIndex].price.usd,
-                    mexico: mexicoOrdersInput.value,
-                    china: chinaOrdersInput.value
-                };
-
-                data.push(rowData);
-
-                week++;
-                random = Math.floor(Math.random() * 40) + 1;
-
-                if (week > 20) {
-                    week = 20;
-                    return;
-                }
-
-                weekEl.textContent = week;
-                randomEl.textContent = random;
-
-                productIndex = Math.floor(Math.random() * products.length);
-                updateProduct();
-
-                // Clear input boxes for new input
-                mexicoOrdersInput.value = '';
-                chinaOrdersInput.value = '';
+          if (week >= -1) {
+            deliveries.mexico.forEach((order, index) => {
+              if (order.week + 2 === week) {
+                capacity += order.quantity;
+                deliveries.mexico.splice(index, 1);
+              }
             });
+          }
+          
+          if (week >= 1) {
+            deliveries.china.forEach((order, index) => {
+              if (order.week + 4 === week) {
+                capacity += order.quantity;
+                deliveries.china.splice(index, 1);
+              }
+            });
+          }
 
+          
             function downloadData() {
                 const ws = XLSX.utils.json_to_sheet(data);
                 const wb = XLSX.utils.book_new();
@@ -352,5 +388,3 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>
 </body>
 </html>
-
-
