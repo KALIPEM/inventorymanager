@@ -26,7 +26,7 @@
             line-height: 50px;
             text-align: center;
             margin: 10px;
-            background-color: lightblue;
+            background-color: rgb(12, 204, 99);
             color: white;
             margin-bottom: 30px;
             user-select: none;
@@ -44,12 +44,12 @@
             line-height: 50px;
             text-align: center;
             margin: 10px 10px 40px 10px;
-            background-color: lightblue;
+            background-color: rgb(12, 204, 99);
             color: white;
             user-select: none;
         }
         button {
-            background-color: purple;
+            background-color: #0853aa;
             border: none;
             color: white;
             padding: 15px 0;
@@ -239,21 +239,21 @@
   <div class="player-guide-content">
     <h2>Sourcing Simulator</h2>
     <p>Hello! You must be our company's new sourcing manager. <br>
-    Let me run you through your duties. Primarily you have to <br>
-    make periodic decisions for a new product. Demand is highly<br>
-    uncertain and a probabilistic forecast is provided. You can <br>
-    place order to Mexico and China in each round, these sources <br>
-     differ in cost. If you order from Mexico the source will be <br>
-     delivered within  2 weeks but if you order from China the source <br>
-      will be delivered after 4 weeks.Currently you can only order 40 <br>
-       products from each country.</p>
+      Let me run you through your duties. Primarily you have to <br>
+      make periodic decisions for a new product. Demand is highly<br>
+      uncertain and a probabilistic forecast is provided. You can <br>
+      place order to Mexico and China in each round, these sources <br>
+       differ in cost. If you order from Mexico the source will be <br>
+       delivered within  2 weeks but if you order from China the source <br>
+        will be delivered after 4 weeks.Currently you can only order 40 <br>
+         products from each country.</p>
   </div>
 </div>
 
 <!-- Tooltip Structure -->
 <div id="tooltip" class="tooltip">
   <div class="tooltip-content">
-    <p>Dummy paragraph for tooltip.</p>
+    <p></p>
   </div>
   <div class="tooltip-arrow"></div>
 </div>
@@ -261,7 +261,7 @@
     <div class="container">
         <div class="box-title">Round</div>
         <div class="week">0</div>
-       <!-- <div style="margin-bottom: 5px;">Balance</div>
+        <!--<div style="margin-bottom: 5px;">Balance</div>
         <div class="balance"></div>-->
         <div style="margin-bottom: 5px;">Demand</div>
         <div class="random"></div>
@@ -346,6 +346,9 @@
           });
 
 
+
+
+            
           let week = -3;
           let random = 0;
           const weekEl = document.querySelector(".week");
@@ -376,8 +379,6 @@
           }
           
           updateProduct();
-
-          let balance = 0;
           
           nextWeekBtn.addEventListener("click", () => {
               const mexicoOrders = parseInt(mexicoOrdersInput.value) || 0;
@@ -396,9 +397,6 @@
               const revenue = sales * 10;
 
               const profit = revenue - costs;
-
-              balance += profit;
-              document.querySelector(".balance").textContent = balance; 
           
               const rowData = {
                   week,
@@ -502,7 +500,6 @@
             // Modify this array to include the elements you want to add tooltips to
             const tooltipTargets = [
               { element: document.querySelector(".week"), content: "This is the round in which you are playing currently." },
-            //  { element: document.querySelector(".balance"), content: "This is your current balance." },
               { element: document.querySelector(".random"), content: "This is the demand of the product during this round, but demand is not applicable in the first 4 weeks." },
               { element: document.querySelector(".product"), content: "This is the product price." },
               { element: document.getElementById("mexicoOrders"), content: "This is where you can order from Mexico, you can only order upto 40." },
@@ -547,10 +544,12 @@
               tooltip.addEventListener("click", () => {
                 nextTooltip();
               });
+              
+              // Show the player guide popup after the loading screen ends
         </script>
     </div>
     <audio id="background-music" loop>
-      <source src="into-the-sea-99297.mp3" type="audio/mpeg">
+      <source src="ambient-dreamy-clouds-135528.mp3" type="audio/mpeg">
   </audio>
 </body>
 </html>
