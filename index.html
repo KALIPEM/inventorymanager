@@ -164,6 +164,55 @@
         }
 
         /* loading screen end */
+
+        /* Player Guide Popup */
+        .player-guide-popup {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 9999;
+          text-align: center;
+          padding-top: 150px;
+        }
+        
+        .player-guide-content {
+          display: inline-block;
+          padding: 20px;
+          background-color: white;
+          border-radius: 10px;
+        }
+        
+        /* Tooltip */
+        .tooltip {
+          display: none;
+          position: absolute;
+          background-color: white;
+          border-radius: 5px;
+          padding: 10px;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+          z-index: 10000;
+        }
+        
+        .tooltip-arrow {
+          position: absolute;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 10px;
+        }
+        
+        /* Modify these values based on the tooltip position */
+        .tooltip-arrow.top {
+          bottom: 100%;
+          left: 50%;
+          margin-left: -10px;
+          border-color: transparent transparent white transparent;
+        }
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
@@ -184,6 +233,22 @@
       </div>
 
       <!--Loading screen end-->
+
+      <!-- Player Guide Popup -->
+<div id="playerGuidePopup" class="player-guide-popup">
+  <div class="player-guide-content">
+    <h2>Sourcing Simulator</h2>
+    <p>Dummy paragraph for player guide introduction.</p>
+  </div>
+</div>
+
+<!-- Tooltip Structure -->
+<div id="tooltip" class="tooltip">
+  <div class="tooltip-content">
+    <p>Dummy paragraph for tooltip.</p>
+  </div>
+  <div class="tooltip-arrow"></div>
+</div>
 
     <div class="container">
         <div class="box-title">Round</div>
@@ -265,6 +330,7 @@
               if (pageLoaded && repetitions >= 3) {
                 clearInterval(checkLoadingStatus);
                 hideLoadingScreen();
+                setTimeout(showPlayerGuidePopup, 1000);
               }
             }, 100);
           });
@@ -408,6 +474,73 @@
             }
 
             downloadBtn.addEventListener("click", downloadData);
+
+            // Player Guide Popup
+            const playerGuidePopup = document.getElementById("playerGuidePopup");
+            const tooltip = document.getElementById("tooltip");
+            
+            function showPlayerGuidePopup() {
+              playerGuidePopup.style.display = "block";
+            }
+            
+            function hidePlayerGuidePopup() {
+              playerGuidePopup.style.display = "none";
+            }
+            
+            // Modify this array to include the elements you want to add tooltips to
+            const tooltipTargets = [
+              { element: document.querySelector(".week"), content: "Dummy paragraph for week tooltip." },
+              { element: document.querySelector(".random"), content: "Dummy paragraph for demand tooltip." },
+              { element: document.querySelector(".product"), content: "Dummy paragraph for product tooltip." },
+              { element: document.getElementById("mexicoOrders"), content: "Dummy paragraph for Mexico orders tooltip." },
+              { element: document.getElementById("chinaOrders"), content: "Dummy paragraph for China orders tooltip." },
+              { element: document.getElementById("nextWeek"), content: "Dummy paragraph for China orders tooltip." },
+              { element: document.getElementById("download"), content: "Dummy paragraph for China orders tooltip." },
+            ];
+            
+            let tooltipIndex = 0;
+            
+            function showTooltip() {
+              const target = tooltipTargets[tooltipIndex];
+            
+              if (!target) {
+                tooltip.style.display = "none";
+                return;
+              }
+            
+              tooltip.querySelector(".tooltip-content").textContent = target.content;
+              tooltip.style.display = "block";
+            
+              const targetRect = target.element.getBoundingClientRect();
+              tooltip.style.left = `${targetRect.left + (targetRect.width / 2) - (tooltip.offsetWidth / 2)}px`;
+                tooltip.style.top = `${targetRect.top - tooltip.offsetHeight + 80}px`;
+              
+                const arrow = tooltip.querySelector(".tooltip-arrow");
+                arrow.classList.add("top");
+                arrow.style.left = `${(tooltip.offsetWidth / 2) - 10}px`;
+              }
+              
+              function nextTooltip() {
+                tooltipIndex++;
+                showTooltip();
+              }
+              
+              // Event listeners
+              playerGuidePopup.addEventListener("click", () => {
+                hidePlayerGuidePopup();
+                showTooltip();
+              });
+              
+              tooltip.addEventListener("click", () => {
+                nextTooltip();
+              });
+              
+              // Show the player guide popup after the loading screen ends
+             
+
+
+
+
         </script>
     </div>
     <audio id="background-music" loop>
