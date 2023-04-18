@@ -6,7 +6,7 @@
     <title>Sourcing Simulator - Manage your company's inventory</title>
     <style>
         body {
-            background: black;
+            background: rgb(255, 255, 255);
             /*background-image: url('https://i.imgur.com/8jbzF5M.jpg');
             background-repeat: no-repeat;
             background-size: cover;*/
@@ -15,18 +15,18 @@
           
         .container {
             text-align: center;
-            color: white;
+            color: black;
             padding: 100px auto 60px auto;
         }
-        .week, .random {
+        .week, .random, .balance {
             width: 100px;
             height: 50px;
-            border: 1px solid black;
+            border: 0px solid black;
             display: inline-block;
             line-height: 50px;
             text-align: center;
             margin: 10px;
-            background-color: darkblue;
+            background-color: rgb(12, 204, 99);
             color: white;
             margin-bottom: 30px;
             user-select: none;
@@ -44,12 +44,12 @@
             line-height: 50px;
             text-align: center;
             margin: 10px 10px 40px 10px;
-            background-color: darkblue;
+            background-color: rgb(12, 204, 99);
             color: white;
             user-select: none;
         }
         button {
-            background-color: #4CAF50;
+            background-color: #0853aa;
             border: none;
             color: white;
             padding: 15px 0;
@@ -253,6 +253,8 @@
     <div class="container">
         <div class="box-title">Round</div>
         <div class="week">0</div>
+        <div style="margin-bottom: 5px;">Balance</div>
+        <div class="balance"></div>
         <div style="margin-bottom: 5px;">Demand</div>
         <div class="random"></div>
         <br>
@@ -365,10 +367,12 @@
           function updateProduct() {
               const productEl = document.querySelector(".product");
               const product = products[productIndex];
-              productEl.textContent = `${product.name} - $${product.price.usd} / ₹${product.price.inr}`;
+              productEl.textContent = `${product.name} - $${product.price.usd} `;
           }
           
           updateProduct();
+
+          let balance = 0;
           
           nextWeekBtn.addEventListener("click", () => {
               const mexicoOrders = parseInt(mexicoOrdersInput.value) || 0;
@@ -387,6 +391,9 @@
               const revenue = sales * 10;
 
               const profit = revenue - costs;
+
+              balance += profit;
+              document.querySelector(".balance").textContent = balance; 
           
               const rowData = {
                   week,
@@ -490,6 +497,7 @@
             // Modify this array to include the elements you want to add tooltips to
             const tooltipTargets = [
               { element: document.querySelector(".week"), content: "Dummy paragraph for week tooltip." },
+              { element: document.querySelector(".balance"), content: "Dummy paragraph for week tooltip." },
               { element: document.querySelector(".random"), content: "Dummy paragraph for demand tooltip." },
               { element: document.querySelector(".product"), content: "Dummy paragraph for product tooltip." },
               { element: document.getElementById("mexicoOrders"), content: "Dummy paragraph for Mexico orders tooltip." },
@@ -513,11 +521,11 @@
             
               const targetRect = target.element.getBoundingClientRect();
               tooltip.style.left = `${targetRect.left + (targetRect.width / 2) - (tooltip.offsetWidth / 2)}px`;
-                tooltip.style.top = `${targetRect.top - tooltip.offsetHeight + 80}px`;
+                tooltip.style.top = `${targetRect.top - tooltip.offsetHeight + 120}px`;
               
                 const arrow = tooltip.querySelector(".tooltip-arrow");
                 arrow.classList.add("top");
-                arrow.style.left = `${(tooltip.offsetWidth / 2) - 10}px`;
+                arrow.style.left = `${(tooltip.offsetWidth / 2) - 0}px`;
               }
               
               function nextTooltip() {
@@ -536,16 +544,10 @@
               });
               
               // Show the player guide popup after the loading screen ends
-             
-
-
-
-
         </script>
     </div>
     <audio id="background-music" loop>
       <source src="ambient-dreamy-clouds-135528.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
   </audio>
 </body>
 </html>
