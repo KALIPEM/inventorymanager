@@ -238,7 +238,8 @@
 <div id="playerGuidePopup" class="player-guide-popup">
   <div class="player-guide-content">
     <h2>Sourcing Simulator</h2>
-    <p>Dummy paragraph for player guide introduction.</p>
+    <p>Hello! You must be our company's new sourcing manager. <br>
+    Let me run you through your duties. Primarily you have to make periodic decisions for a new product. Demand is highly uncertain and a probabilistic</p>
   </div>
 </div>
 
@@ -253,8 +254,8 @@
     <div class="container">
         <div class="box-title">Round</div>
         <div class="week">0</div>
-        <div style="margin-bottom: 5px;">Balance</div>
-        <div class="balance"></div>
+       <!-- <div style="margin-bottom: 5px;">Balance</div>
+        <div class="balance"></div>-->
         <div style="margin-bottom: 5px;">Demand</div>
         <div class="random"></div>
         <br>
@@ -338,9 +339,6 @@
           });
 
 
-
-
-            
           let week = -3;
           let random = 0;
           const weekEl = document.querySelector(".week");
@@ -496,14 +494,14 @@
             
             // Modify this array to include the elements you want to add tooltips to
             const tooltipTargets = [
-              { element: document.querySelector(".week"), content: "Dummy paragraph for week tooltip." },
-              { element: document.querySelector(".balance"), content: "Dummy paragraph for week tooltip." },
-              { element: document.querySelector(".random"), content: "Dummy paragraph for demand tooltip." },
-              { element: document.querySelector(".product"), content: "Dummy paragraph for product tooltip." },
-              { element: document.getElementById("mexicoOrders"), content: "Dummy paragraph for Mexico orders tooltip." },
-              { element: document.getElementById("chinaOrders"), content: "Dummy paragraph for China orders tooltip." },
-              { element: document.getElementById("nextWeek"), content: "Dummy paragraph for China orders tooltip." },
-              { element: document.getElementById("download"), content: "Dummy paragraph for China orders tooltip." },
+              { element: document.querySelector(".week"), content: "This is the round in which you are playing currently." },
+              { element: document.querySelector(".balance"), content: "This is your current balance." },
+              { element: document.querySelector(".random"), content: "This is the demand of the product during this round, but demand is not applicable in the first 4 weeks." },
+              { element: document.querySelector(".product"), content: "This is the product price." },
+              { element: document.getElementById("mexicoOrders"), content: "This is where you can order from Mexico, you can only order upto 40." },
+              { element: document.getElementById("chinaOrders"), content: "This is where you can order from China, you can only order upto 40." },
+              { element: document.getElementById("nextWeek"), content: "Click here to proceed to the next round." },
+              { element: document.getElementById("download"), content: "Click here to download your data upto the current round." },
             ];
             
             let tooltipIndex = 0;
@@ -542,8 +540,6 @@
               tooltip.addEventListener("click", () => {
                 nextTooltip();
               });
-              
-              // Show the player guide popup after the loading screen ends
         </script>
     </div>
     <audio id="background-music" loop>
