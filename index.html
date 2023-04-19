@@ -16,7 +16,12 @@
         .container {
             text-align: center;
             color: black;
-            padding: 100px auto 60px auto;
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+            padding: 0 auto 60px auto;
+            background-color: rgba(71, 71, 71, 0.5);
         }
         .week, .random, .balance {
             width: 100px;
@@ -215,6 +220,55 @@
           border-color: transparent transparent white transparent;
         }
 
+        .infoboxes {
+          display: flex;
+          justify-content: space-around;
+          margin-bottom: 20px;
+          padding-top: 90px;
+          gap: 10px;
+        }
+        
+        .infobox {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .weekbox{
+          top: 92px;
+          position: absolute;
+        }
+
+        @media (max-width: 768px) {
+          .info-boxes {
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .info-box {
+            margin-bottom: 20px;
+          }
+        }
+
+        #video-background {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          min-width: 100%;
+          min-height: 100%;
+          width: auto;
+          height: auto;
+          z-index: -100;
+          transform: translateX(-50%) translateY(-50%);
+          background-color: rgba(0, 0, 0, 1);
+        }
+        
+        @media (pointer: coarse) and (hover: none) {
+          #video-background {
+            display: none;
+          }
+        }
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
@@ -261,26 +315,38 @@
 </div>
 
     <div class="container">
-        <div class="box-title">Round</div>
-        <div class="week">-3</div>
-        <!-- <div style="margin-bottom: 5px;">Balance</div>
-        <div class="balance"></div>-->
-        <div style="margin-bottom: 5px;">Demand</div>
-        <div class="random"></div>
+      <div class="infoboxes">
+        <div class="infobox weekbox">
+          <div class="box-title" style="color: white;">Round</div>
+          <div class="week">-3</div>
+        </div>
+        <div class="infobox randombox">
+          <div style="margin-bottom: 5px;color: white;">Demand</div>
+          <div class="random"></div>
+        </div>
+        <div class="infobox balancebox">
+          <div style="margin-bottom: 5px;color: white;">Balance</div>
+          <div class="balance">0</div>
+        </div>
+      </div>
         <br>
         <div class="product"> $10 </div>
         <br>
         <button id="mexico">Mexico</button>
         <input type="number" id="mexicoOrders" placeholder="Number of orders" min="0" max="50">
-        <p style="color:#4CAF50;">Mexico Sourcing cost: $8</p>
+        <p style="color:black;">Mexico Sourcing cost: $8</p>
         <br>
         <button id="china">China</button>
         <input type="number" id="chinaOrders" placeholder="Number of orders" min="0" max="50">
-        <p style="color:#4CAF50;">China Sourcing cost: $7</p>
+        <p style="color:black;">China Sourcing cost: $7</p>
         <br>
         <button id="nextWeek">Next Round</button>
         <br>
         <button id="download" style="width: 120px;">Download Data</button>
+
+        <video id="video-background" autoplay muted loop>
+          <source src="cargo.mp4" type="video/mp4">
+        </video>
 
         <script>
             
@@ -346,13 +412,10 @@
               }
             }, 100);
           });
-
-
-
-
-            
+  
           let week = -3;
           let random = 0;
+          let balance= 0;
           const weekEl = document.querySelector(".week");
           const randomEl = document.querySelector(".random");
           randomEl.textContent = random;
@@ -360,11 +423,9 @@
           const chinaOrdersInput = document.getElementById("chinaOrders");
           const nextWeekBtn = document.getElementById("nextWeek");
           const downloadBtn = document.getElementById("download");
-
-          
-          
+ 
           const data = [];
-          const header = { week: "Week", demand: "Demand", price: "Product Price", mexico: "Order Mexico", china: "Order China", sales: "sales", costs: "Costs",revenue: "Revenue",Profit: "Profit", capacity: "Inventory", value: "Value" };
+          const header = { week: "Week", demand: "Demand", price: "Product Price", mexico: "Order Mexico", china: "Order China", sales: "sales", costs: "Costs",revenue: "Revenue",Profit: "Profit", capacity: "Inventory", value: "Value", balance: "Balance" };
           data.push(header);
           let capacity = 0;
           const deliveries = { mexico: [], china: [] };
@@ -378,6 +439,13 @@
           let sales = 0;
           let revenue = 0;
           let profit = 0;
+
+          function updateBalance() {
+            // Calculate the profit for the current week and add it to the balance
+            // Replace this line with your profit calculation logic
+            balance += profit;
+            document.querySelector(".balance").innerText = balance;
+          }
 
           function updateProduct() {
               const productEl = document.querySelector(".product");
@@ -407,6 +475,8 @@
           revenue = sales * 10;
           const costs = (mexicoOrders * 8) + (chinaOrders * 7);
           profit = revenue - costs;
+
+          updateBalance();
         
           // Save the data for the current week
           const rowData = {
@@ -420,7 +490,8 @@
             revenue,
             profit,
             capacity,
-            value: lastRoundValue
+            value: lastRoundValue,
+            balance
           };
           data.push(rowData);
         
@@ -452,6 +523,7 @@
               deliveries.china.splice(index, 1);
             }
           });
+
         
           // Update lastRoundValue
           lastRoundValue += profit;
@@ -460,8 +532,6 @@
           mexicoOrdersInput.value = '';
           chinaOrdersInput.value = '';
         });
-
-        
           
             function downloadData() {
                 const ws = XLSX.utils.json_to_sheet(data);
@@ -504,6 +574,7 @@
             const tooltipTargets = [
               { element: document.querySelector(".week"), content: "This is the round in which you are playing currently." },
               { element: document.querySelector(".random"), content: "This is the demand of the product during this round, but demand is not applicable in the first 4 weeks." },
+              { element: document.querySelector(".balance"), content: "This is your bank balance, try to keep it above 1000." },
               { element: document.querySelector(".product"), content: "This is the product price." },
               { element: document.getElementById("mexicoOrders"), content: "This is where you can order from Mexico, you can only order upto 40." },
               { element: document.getElementById("chinaOrders"), content: "This is where you can order from China, you can only order upto 40." },
@@ -526,7 +597,7 @@
             
               const targetRect = target.element.getBoundingClientRect();
               tooltip.style.left = `${targetRect.left + (targetRect.width / 2) - (tooltip.offsetWidth / 2)}px`;
-                tooltip.style.top = `${targetRect.top - tooltip.offsetHeight + 80}px`;
+                tooltip.style.top = `${targetRect.top - tooltip.offsetHeight + 90}px`;
               
                 const arrow = tooltip.querySelector(".tooltip-arrow");
                 arrow.classList.add("top");
@@ -552,7 +623,7 @@
         </script>
     </div>
     <audio id="background-music" loop>
-      <source src="ambient-dreamy-clouds-135528.mp3" type="audio/mpeg">
+      <source src="into-the-sea-99297.mp3" type="audio/mpeg">
   </audio>
 </body>
 </html>
