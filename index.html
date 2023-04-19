@@ -66,6 +66,8 @@
             border-radius: 40px 0% 0% 40px;
             margin-bottom: 4px;
             margin-top: 10px;
+            cursor: auto;
+            user-select: none;
         }
         input[type="number"] {
             width: 180px;
@@ -260,8 +262,8 @@
 
     <div class="container">
         <div class="box-title">Round</div>
-        <div class="week">0</div>
-        <!--<div style="margin-bottom: 5px;">Balance</div>
+        <div class="week">-3</div>
+        <!-- <div style="margin-bottom: 5px;">Balance</div>
         <div class="balance"></div>-->
         <div style="margin-bottom: 5px;">Demand</div>
         <div class="random"></div>
@@ -269,11 +271,11 @@
         <div class="product"> $10 </div>
         <br>
         <button id="mexico">Mexico</button>
-        <input type="number" id="mexicoOrders" placeholder="Number of orders" min="0" max="40">
+        <input type="number" id="mexicoOrders" placeholder="Number of orders" min="0" max="50">
         <p style="color:#4CAF50;">Mexico Sourcing cost: $8</p>
         <br>
         <button id="china">China</button>
-        <input type="number" id="chinaOrders" placeholder="Number of orders" min="0" max="40">
+        <input type="number" id="chinaOrders" placeholder="Number of orders" min="0" max="50">
         <p style="color:#4CAF50;">China Sourcing cost: $7</p>
         <br>
         <button id="nextWeek">Next Round</button>
@@ -358,6 +360,8 @@
           const chinaOrdersInput = document.getElementById("chinaOrders");
           const nextWeekBtn = document.getElementById("nextWeek");
           const downloadBtn = document.getElementById("download");
+
+          
           
           const data = [];
           const header = { week: "Week", demand: "Demand", price: "Product Price", mexico: "Order Mexico", china: "Order China", sales: "sales", costs: "Costs",revenue: "Revenue",Profit: "Profit", capacity: "Inventory", value: "Value" };
@@ -371,7 +375,10 @@
           
           let productIndex = 0;
           let lastRoundValue = 0;
-          
+          let sales = 0;
+          let revenue = 0;
+          let profit = 0;
+
           function updateProduct() {
               const productEl = document.querySelector(".product");
               const product = products[productIndex];
@@ -381,84 +388,80 @@
           updateProduct();
           
           nextWeekBtn.addEventListener("click", () => {
-              const mexicoOrders = parseInt(mexicoOrdersInput.value) || 0;
-              const chinaOrders = parseInt(chinaOrdersInput.value) || 0;
-              const costs = (mexicoOrders * 8) + (chinaOrders * 7);
-              const value = (8 * mexicoOrders) + (7 * chinaOrders) + lastRoundValue;
-
-
-              let sales;
-              if(capacity >= random) {
-                sales = random;
-              } else {
-                sales = capacity;
-              }
-
-              const revenue = sales * 10;
-
-              const profit = revenue - costs;
-          
-              const rowData = {
-                  week,
-                  demand: random,
-                  product: products[productIndex].name,
-                  price: products[productIndex].price.usd,
-                  mexico: mexicoOrders,
-                  china: chinaOrders,
-                  sales,
-                  costs,
-                  revenue,
-                  profit,
-                  capacity,
-                  value
-              };
-          
-              data.push(rowData);
-          
-              week++;
-              if (week > 20) {
-                  week = 20;
-                  return;
-              }
-          
-              weekEl.textContent = week;
-          
-              if (week >= 1) {
-                  random = Math.floor(Math.random() * 91) + 5;
-                  randomEl.textContent = random;
-              }else {
-                  random = 0;
-                  randomEl.textContent = random;
-              }
-          
-              productIndex = Math.floor(Math.random() * products.length);
-              updateProduct();
-          
-              lastRoundValue = value;
-          
-              // Clear input boxes for new input
-              mexicoOrdersInput.value = '';
-              chinaOrdersInput.value = '';
-          });
-
-          if (week >= -1) {
-            deliveries.mexico.forEach((order, index) => {
-              if (order.week + 2 === week) {
-                capacity += order.quantity;
-                deliveries.mexico.splice(index, 1);
-              }
-            });
+          const mexicoOrders = parseInt(mexicoOrdersInput.value) || 0;
+          const chinaOrders = parseInt(chinaOrdersInput.value) || 0;
+        
+          // Add the current week's orders to the deliveries object
+          deliveries.mexico.push({ week, quantity: mexicoOrders });
+          deliveries.china.push({ week, quantity: chinaOrders });
+        
+          // Deduct the sales from the capacity
+          if (capacity >= random) {
+            sales = random;
+          } else {
+            sales = capacity;
           }
-          
+          capacity -= sales;
+        
+          // Calculate revenue and profit
+          revenue = sales * 10;
+          const costs = (mexicoOrders * 8) + (chinaOrders * 7);
+          profit = revenue - costs;
+        
+          // Save the data for the current week
+          const rowData = {
+            week,
+            demand: random,
+            price: products[productIndex].price.usd,
+            mexico: mexicoOrders,
+            china: chinaOrders,
+            sales,
+            costs,
+            revenue,
+            profit,
+            capacity,
+            value: lastRoundValue
+          };
+          data.push(rowData);
+        
+          // Update week and demand
+          week++;
+          if (week > 20) {
+            week = 20;
+            return;
+          }
+          weekEl.textContent = week;
           if (week >= 1) {
-            deliveries.china.forEach((order, index) => {
-              if (order.week + 4 === week) {
-                capacity += order.quantity;
-                deliveries.china.splice(index, 1);
-              }
-            });
+            random = Math.floor(Math.random() * 91) + 5;
+            randomEl.textContent = random;
+          } else {
+            random = 0;
+            randomEl.textContent = random;
           }
+        
+          // Update capacity based on deliveries
+          deliveries.mexico.forEach((order, index) => {
+            if (order.week + 2 === week) {
+              capacity += order.quantity;
+              deliveries.mexico.splice(index, 1);
+            }
+          });
+          deliveries.china.forEach((order, index) => {
+            if (order.week + 4 === week) {
+              capacity += order.quantity;
+              deliveries.china.splice(index, 1);
+            }
+          });
+        
+          // Update lastRoundValue
+          lastRoundValue += profit;
+        
+          // Clear input boxes for new input
+          mexicoOrdersInput.value = '';
+          chinaOrdersInput.value = '';
+        });
 
+        
           
             function downloadData() {
                 const ws = XLSX.utils.json_to_sheet(data);
@@ -549,7 +552,7 @@
         </script>
     </div>
     <audio id="background-music" loop>
-      <source src="into-the-sea-99297.mp3" type="audio/mpeg">
+      <source src="ambient-dreamy-clouds-135528.mp3" type="audio/mpeg">
   </audio>
 </body>
 </html>
